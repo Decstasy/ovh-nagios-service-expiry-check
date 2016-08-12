@@ -1,0 +1,2 @@
+- Create function to generate the needed token via provider api
+- Describe installation, needed parameters, how to create api stuff and thereby comprehensive nagios config in readme
