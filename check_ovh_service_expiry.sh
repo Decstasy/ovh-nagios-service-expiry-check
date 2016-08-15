@@ -147,7 +147,7 @@ Answer [1-3]: "
    read answer
    regex='^[1-3]$'
    if ! [[ $answer =~ $regex ]] ; then
-        >&2 echo "Error: Not a number"
+        >&2 echo "Error: Not a valid number!"
         exit 1
    fi
    case $answer in
