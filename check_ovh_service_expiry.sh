@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #  ┌────────────────────────────────────────────────────────────────────────────╖
-#  │ Nagios script to check Domain and Server exexpiry date from ovh,           ║
+#  │ Nagios script to check Domain and Server expiry date from ovh,             ║
 #  │ SoYouStart and Kimsufi.                                                    ║
 #  │ Copyright (C) 2016 Dennis Ullrich                                          ║
 #  │ E-Mail: request@decstasy.de                                                ║
@@ -249,7 +249,8 @@ while getopts “:hdgW:C:P:t:k:s:c:p:” OPTION; do
             ;;
         h)          usage
             ;;
-        g)          generate_key
+        g)          check_progs
+                    generate_key
             ;;
         W)          warn=$OPTARG
             ;;
