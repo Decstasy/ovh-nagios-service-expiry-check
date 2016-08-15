@@ -51,12 +51,14 @@ Check expiry date of Server's and Domain's from OVH (ovh), SoYouStart (sys) and 
 
 -----------------------------------------------------------------------------------------------------------------
 
-You can get the API keys here:
+Execute the Script with -g parameter to generate the keys. You will be guided through the whole process.
+
+If it does not work for any reason... You can get the API keys here:
 OVH: https://eu.api.ovh.com/createApp/
 SYS: https://eu.api.soyoustart.com/createApp/
 KSF: https://eu.api.kimsufi.com/createApp/
 
-You have to generate the consumer key after you generated the application key and secret. (Execute this Script with -g parameter)
+You have to generate the consumer key after you generated the application key and secret.
 You should read this: https://api.ovh.com/g934.first_step_with_api#creating_identifiers_requesting_an_authentication_token_from_ovh
 
 Allow access to:
