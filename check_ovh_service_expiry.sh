@@ -22,6 +22,8 @@
 #  │ Changelog:                                                                 ║
 #  │ 2016-03-29 Version 0.1b                                                    ║
 #  │    + First release                                                         ║
+#  │ 2016-08-15 Version 0.1                                                     ║
+#  │    + Added function to generate keys (-g) and altered help                 ║
 #  ╘════════════════════════════════════════════════════════════════════════════╝
 
 #----------------------------------------------#
@@ -37,6 +39,7 @@ Check expiry date of Server's and Domain's from OVH (ovh), SoYouStart (sys) and 
 
 -h                      Display this help and exit
 -d                      Debug mode (be aware - your terminal will be spammed)
+-g                      Generate API keys - just follow instructions on terminal.
 -W [Days]               Warn before product will expire in day(s) - optional - default 5
 -C [Days]               Raise critical notification in day(s) before product will expire - optional - default 2
 -P [Provider]           Allowed values: ovh, sys, ksf
@@ -53,7 +56,7 @@ OVH: https://eu.api.ovh.com/createApp/
 SYS: https://eu.api.soyoustart.com/createApp/
 KSF: https://eu.api.kimsufi.com/createApp/
 
-You have to validate the token after you generated the consumerKey.
+You have to generate the consumer key after you generated the application key and secret. (Execute this Script with -g parameter)
 You should read this: https://api.ovh.com/g934.first_step_with_api#creating_identifiers_requesting_an_authentication_token_from_ovh
 
 Allow access to:
@@ -129,6 +132,96 @@ function get_exp_date {
     fi
 }
 
+function generate_key {
+   echo -en "You have to generate 3 keys via the API to use this script in the first place.
+You will be guided through this - its really simple.
+If you want to know what's going on, you may read this: https://api.ovh.com/g934.first_step_with_api
+
+Choose your Provider:
+1 OVH
+2 SoYouStart
+3 Kimsufi
+Answer [1-3]: "
+   read answer
+   regex='^[1-3]$'
+   if ! [[ $answer =~ $regex ]] ; then
+        >&2 echo "Error: Not a number"
+        exit 1
+   fi
+   case $answer in
+        1) api="https://eu.api.ovh.com"
+        ;;
+        2) api="https://eu.api.soyoustart.com"
+        ;;
+        3) api="https://eu.api.kimsufi.com"
+        ;;
+   esac
+
+   echo -en "\n- Open your browser: $api/createApp/
+- Enter your credentials
+- Enter application name e.g. NagiosExpiryCheck
+- Enter application description e.g. checks service expiry date
+You will get the application key and an application secret key.
+You should store both of them in a safe place - you will need it later.
+Ready for the next step [y|n]? "
+   read answer
+   answer=${answer,,} # convert all to lower case
+   regex='^(yes|ye|y)$'
+   if ! [[ $answer =~ $regex ]]; then
+        >&2 echo "Really? o.O"
+        exit 1
+   fi
+
+   echo -en "\nPlease enter your keys in order to query the API to get your consumer key.
+\e[1m!!! Pay attention that there are no whitespaces in your answer !!!\e[0m
+Enter application key: "
+   read ak
+   echo -en "Enter application secret: "
+   read as
+   regex='^[a-zA-Z0-9]+$'
+   for answer in $ak $as; do
+        if ! [[ $answer =~ $regex ]] ; then
+           >&2 echo "Error: Invalid input. Only uppercase, lowercase character from a-z and numbers from 0-9 allowed!"
+           exit 1
+        fi
+   done
+
+   echo -en "\nQuerying API... "
+   response="$(curl -XPOST -H"X-Ovh-Application: $ak" -H "Content-type: application/json" $api/1.0/auth/credential  -d '{
+        "accessRules": [
+                {
+                  "method": "GET",
+                  "path": "/dedicated/server/*"
+                },
+                {
+                  "method": "GET",
+                  "path": "/domain/*"
+                }
+        ]
+   }' 2>/dev/null | sed 's/,/\n/g' | grep -oP '(https:\/\/.*Token=[\w\d]*)|((?<=consumerKey":")[\w\d]*)')"
+   if [ "$(echo "$response" | wc -l)" = "2" ]; then
+        echo "OK"
+   else
+        >&2 echo "FAILED - Did not get the expected response."
+        >&2 echo "Please check your application key and the connection to the API $api. Perhaps run this script with -d parameter?"
+        exit 1
+   fi
+   ValidationURL=$(echo "$response" | head -n 1)
+   ck=$(echo "$response" | tail -1)
+
+   echo -e "\nOpen the following URL in your browser to validate your consumer key: $ValidationURL
+Enter your credentials again and choose \"Validity: Unlimited\"
+
+After that... You should get the response \"Your token is now valid, you can use it in your application\" on top of the page.
+
+Here are your 3 keys to finally use this script:
+application key: $ak
+application secret: $as
+consumer key: $ck"
+
+   exit 0
+}
+
 #----------------------------------------------#
 ##### --------------- VARS --------------- #####
 #----------------------------------------------#
@@ -147,12 +240,14 @@ ck=
 serviceName=
 
 # Parse options
-while getopts “:hdW:C:P:t:k:s:c:p:” OPTION; do
+while getopts “:hdgW:C:P:t:k:s:c:p:” OPTION; do
     case $OPTION in
         d)          # Debug
                     set -x
             ;;
         h)          usage
+            ;;
+        g)          generate_key
             ;;
         W)          warn=$OPTARG
             ;;
