@@ -9,7 +9,6 @@
   2. Configure Nagios
     * For Domains
     * For dedicated servers
-3. Changelog
 
 ## Description
 ### What it's designed for
@@ -44,7 +43,3 @@ Since we implemented a guide to generate theese keys it's pretty simple. Just fo
 
 ### Configure Nagios
 **This will follow shortly...**
-
-## Changelog
-0.1b  Initial release
-0.1 	Added function to generate API keys and altered help
