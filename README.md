@@ -96,7 +96,7 @@ define hostgroup {
 And now the final configuration... Your domain as host:
 ```
 define host {
-        host_name                       decstasy.de
+        host_name*                      decstasy.de
         alias                           Domain decstasy.de
         address                         decstasy.de
         use                             generic-domain
@@ -157,7 +157,7 @@ define host {
         _APP_SECRET                     Wn5ZJnhLISvRK6gD2MDygwAp0WFxelTe
         _CUST_KEY                       x6u7Dl1oukE1kOX3FxeVPj2dWUyw6V0C
         _PROVIDER_NAME                  sys
-        _SERVER_NAME                    ns304258.ip-94-24-218.eu
+        _SERVER_NAME*                   ns304258.ip-94-24-218.eu
         register                        1
 }
 ```
