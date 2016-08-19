@@ -75,7 +75,7 @@ EOF
 
 function check_progs {
         rc=0
-        for program in curl sha1sum awk grep; do
+        for program in curl sha1sum; do
                 hash $program >/dev/null 2>&1
                 if [ $? -ne 0 ]; then
                         echo "No $program installed."
