@@ -16,7 +16,7 @@
 
 ## Description
 ### Prologue
-Please dont hesitate to contact me via [e-mail](mailto:request@decstasy.de) if you have suggestions, ideas, feature requests or bugs.
+Please don't hesitate to contact me via [e-mail](mailto:request@decstasy.de) if you have suggestions, ideas, feature requests or bugs.
 
 ### What it's designed for
 This script is designed to check the expiry date of dedicated servers and domains directly via API. It is especially designed to return the result in a typical nagios format.
@@ -54,10 +54,10 @@ Since I implemented a guide to generate theese keys it's pretty simple. Just fol
 * Execute the script with -g parameter and follow instructions
 
 ### Configure Nagios - General notes
-You have to think about YOUR best solution to implement this monitoring. I'm now talking about my case which suits best for me. I have domains via OVH and servers via SoYouStart which means I have to use different keys. This means I cannot set default keys in the script or command definition - they must be dynamically controled by nagios. As I dont want, that things get messy, the best solution is to work with custom object variables. The following configuration is able to use different keys per CI.
+You have to think about YOUR best solution to implement this monitoring. I'm now talking about my case which suits best for me. I have domains via OVH and servers via SoYouStart which means I have to use different keys. This means I cannot set default keys in the script or command definition - they must be dynamically controled by nagios. As I don't want things to get messy, the best solution is to work with custom object variables. The following configuration is able to use different keys per CI.
 
 ### Configure nagios - Domains
-I suggest to configure a domain as a host and perform the expiry check as host check. In this example configuration a domain from ovh. Please alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
+I suggest to configure a domain as a host and perform the expiry check as host check. In this example configuring a domain from ovh. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
 
 First you will need a new command:
 ```
@@ -94,7 +94,7 @@ define host {
 }
 ```
 
-To establish order in your overview, add the matching hostgroup:
+In order to keep your overview organized, add the matching hostgroup:
 ```
 define hostgroup {
         hostgroup_name                  Domains
@@ -121,7 +121,7 @@ define host {
 **It's important to set host_name to your-domain.com (see command definition).*
 
 ### Configure nagios - Dedicated servers
-I suggest you to check the expiry as a nagios service and store the keys in the host definition. In this example configuration a dedicated server from SoYouStart. Please alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
+I suggest you to check the expiry as a nagios service and store the keys in the host definition - in this example configuration a dedicated server from SoYouStart. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
 
 First you will need a new command:
 ```
@@ -176,6 +176,6 @@ define host {
 ## License
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+This program is distributed hoping that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program; if not, see http://www.gnu.org/licenses/
