@@ -24,6 +24,9 @@
 #  │    + First release                                                         ║
 #  │ 2016-08-15 Version 0.1                                                     ║
 #  │    + Added function to generate keys (-g) and altered help                 ║
+#  │ 2017-05-30 Version 0.2                                                     ║
+#  │    + Changed get_exp_date to use a for loop with 3 retries                 ║
+#  │      (to handle API query problems)                                        ║
 #  ╘════════════════════════════════════════════════════════════════════════════╝
 
 #----------------------------------------------#
@@ -120,18 +123,23 @@ function sys_query {
 }
 
 function get_exp_date {
-    # Query provider
-    ExpirationDate="$(sys_query 'GET' "${pre_query}${serviceName}/serviceInfos")"
-    # Grep date from returned information
-    ExpirationDate="$(echo "$ExpirationDate" | grep -oP '("expiration":")\K\d{4}-\d{2}-\d{2}')"
-    if [ $? = 0 ]; then
-        echo "$ExpirationDate"
-        true
-    else
-        >&2 echo 'Could not get $ExpirationDate in function get_exp_date. Please debug me.'
-        >&2 echo "sys_query ... output: $(sys_query 'GET' "${pre_query}${serviceName}/serviceInfos")"
-        exit 3
-    fi
+    # Loop with 3 tries since OVH has sometimes API problems
+    for ((i = 0 ; i <= 2 ; i++)); do
+        # Query provider
+        ExpirationDate="$(sys_query 'GET' "${pre_query}${serviceName}/serviceInfos")"
+        # Grep date from returned information
+        ExpirationDate="$(echo "$ExpirationDate" | grep -oP '("expiration":")\K\d{4}-\d{2}-\d{2}')"
+        if [ $? = 0 ]; then
+            echo "$ExpirationDate"
+            rc=0
+            break
+        else
+            rc=3
+        fi
+        sleep 5
+    done
+    [[ $rc -eq 3 ]] && >&2 echo "Could not get \$ExpirationDate in function get_exp_date. sys_query output: $(sys_query 'GET' "${pre_query}${serviceName}/serviceInfos")"
+    return $rc
 }
 
 function generate_key {
