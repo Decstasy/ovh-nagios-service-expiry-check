@@ -136,7 +136,7 @@ function get_exp_date {
         else
             rc=3
         fi
-        sleep 5
+        [[ $i -lt 2 ]] && sleep 5
     done
     [[ $rc -eq 3 ]] && >&2 echo "Could not get \$ExpirationDate in function get_exp_date. sys_query output: $(sys_query 'GET' "${pre_query}${serviceName}/serviceInfos")"
     return $rc
