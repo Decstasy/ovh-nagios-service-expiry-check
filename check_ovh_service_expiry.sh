@@ -3,7 +3,7 @@
 #  ┌────────────────────────────────────────────────────────────────────────────╖
 #  │ Nagios script to check Domain and Server expiry date from ovh,             ║
 #  │ SoYouStart and Kimsufi.                                                    ║
-#  │ Copyright (C) 2016 Dennis Ullrich                                          ║
+#  │ Copyright (C) 2016-2017 Dennis Ullrich                                     ║
 #  │ E-Mail: request@decstasy.de                                                ║
 #  ├────────────────────────────────────────────────────────────────────────────╢
 #  │ This program is free software; you can redistribute it and/or modify       ║
@@ -78,17 +78,18 @@ EOF
 
 function check_progs {
         rc=0
+        # At least Bash version 3 is required
+        if [ ${BASH_VERSINFO[0]} -lt 3 ]; then 
+            echo "At least Bash version 3 is required to run this script!"
+            rc=1
+        fi
         for program in curl sha1sum; do
-                hash $program >/dev/null 2>&1
-                if [ $? -ne 0 ]; then
-                        echo "No $program installed."
+                if ! type $program >/dev/null 2>&1; then
+                        echo "No $program installed!"
                         rc=1
                 fi
         done
-        if [ $rc -ge 1 ]; then
-                exit $rc
-        fi
-
+        [[ $rc -ge 1 ]] && exit $rc
         true
 }
 
@@ -111,26 +112,23 @@ function sys_query {
         fi
 
         signature="$as+$ck+$method+$query+$body+$ts"
-        signature="$(sha1sum <(echo -n "$signature") | awk '{print $1}')"
+        signature="$(sha1sum <(echo -n "$signature"))"
 
-        result="$(curl -s -H "X-Ovh-Application:$ak"    \
-        -H "X-Ovh-Timestamp:$ts"                        \
-        -H "X-Ovh-Signature:\$1\$$signature"            \
-        -H "X-Ovh-Consumer:$ck"                         \
-        $query)"
-
-        echo "$result"
+        curl -s -H "X-Ovh-Application:$ak"                  \
+        -H "X-Ovh-Timestamp:$ts"                            \
+        -H "X-Ovh-Signature:\$1\$${signature%[[:space:]]*}" \
+        -H "X-Ovh-Consumer:$ck"                             \
+        $query
 }
 
 function get_exp_date {
-    # Loop with 3 tries since OVH has sometimes API problems
+    # Loop with 3 tries since OVH has sometimes API problems. 
+    # Using curls --retry and --retry-delay is not an option since we have to generate a new signature per retry.
     for ((i = 0 ; i <= 2 ; i++)); do
         # Query provider
         ExpirationDate="$(sys_query 'GET' "${pre_query}${serviceName}/serviceInfos")"
         # Grep date from returned information
-        ExpirationDate="$(echo "$ExpirationDate" | grep -oP '("expiration":")\K\d{4}-\d{2}-\d{2}')"
-        if [ $? = 0 ]; then
-            echo "$ExpirationDate"
+        if grep -oP '("expiration":")\K\d{4}-\d{2}-\d{2}' <<<"$ExpirationDate"; then
             rc=0
             break
         else
@@ -209,15 +207,15 @@ Enter application key: "
                 }
         ]
    }' 2>/dev/null | sed 's/,/\n/g' | grep -oP '(https:\/\/.*Token=[\w\d]*)|((?<=consumerKey":")[\w\d]*)')"
-   if [ "$(echo "$response" | wc -l)" = "2" ]; then
+   if [ "$(wc -l <<<"$response")" = "2" ]; then
         echo "OK"
    else
         >&2 echo "FAILED - Did not get the expected response."
         >&2 echo "Please check your application key and the connection to the API $api. Perhaps run this script with -d parameter?"
         exit 1
    fi
-   ValidationURL=$(echo "$response" | head -n 1)
-   ck=$(echo "$response" | tail -1)
+   ValidationURL=$(head -n 1 <<<"$response")
+   ck=$(tail -1 <<<"$response")
 
    echo -e "\nOpen the following URL in your browser to validate your consumer key: $ValidationURL
 Enter your credentials again and choose \"Validity: Unlimited\"
@@ -225,9 +223,9 @@ Enter your credentials again and choose \"Validity: Unlimited\"
 After that... You should get the response \"Your token is now valid, you can use it in your application\" on top of the page.
 
 Here are your 3 keys to finally use this script:
-application key: $ak
-application secret: $as
-consumer key: $ck"
+Application key: $ak
+Application secret: $as
+Consumer key: $ck"
 
    exit 0
 }
@@ -311,7 +309,7 @@ fi
 
 check_progs
 
-ExpirationDate="$(get_exp_date)" || exit 3
+ExpirationDate="$(get_exp_date)" || exit $?
 # Calculate... The target date - current time in seconds and break down to days
 DaysUntilExpiration=$(( ( $(date -ud $ExpirationDate +'%s') - $(date -u +'%s') )/60/60/24 ))
 
