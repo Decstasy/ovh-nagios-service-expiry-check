@@ -27,6 +27,8 @@
 #  │ 2017-05-30 Version 0.2                                                     ║
 #  │    + Changed get_exp_date to use a for loop with 3 retries                 ║
 #  │      (to handle API query problems)                                        ║
+#  │ 2017-05-30 Version 0.2-1                                                   ║
+#  │    + Improved some code                                                    ║
 #  ╘════════════════════════════════════════════════════════════════════════════╝
 
 #----------------------------------------------#
