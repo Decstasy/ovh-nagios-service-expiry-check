@@ -29,6 +29,8 @@
 #  │      (to handle API query problems)                                        ║
 #  │ 2017-05-30 Version 0.2-1                                                   ║
 #  │    + Improved some code                                                    ║
+#  │ 2017-05-30 Version 0.3-0                                                   ║
+#  │    + Added support for VPS                                                 ║
 #  ╘════════════════════════════════════════════════════════════════════════════╝
 
 #----------------------------------------------#
@@ -48,7 +50,7 @@ Check expiry date of Server's and Domain's from OVH (ovh), SoYouStart (sys) and 
 -W [Days]               Warn before product will expire in day(s) - optional - default 5
 -C [Days]               Raise critical notification in day(s) before product will expire - optional - default 2
 -P [Provider]           Allowed values: ovh, sys, ksf
--t [Type]               Allowed values: domain, server
+-t [Type]               Allowed values: domain, server, vps
 -k [Application Key]    The key e.g.: kdODIcFCmNnb8FII
 -s [Application Secret] The secret e.g.: Wn5ZJmhLISvRT6gV7GDygwAp0WFzbkLe
 -c [Consumer Key]       The key e.g.: x6u9Bs3oukK1kOX3FxkVPj2dWByw6U0C
@@ -69,6 +71,7 @@ You should read this: https://api.ovh.com/g934.first_step_with_api#creating_iden
 Allow access to:
 /dedicated/server/*
 /domain/*
+/vps/*
 
 If you get with enabled debug mode output like this:
 {"errorCode":"INVALID_CREDENTIAL","httpCode":"403 Forbidden","message":"This credential is not valid"}
@@ -206,6 +209,10 @@ Enter application key: "
                 {
                   "method": "GET",
                   "path": "/domain/*"
+                },
+                {
+                  "method": "GET",
+                  "path": "/vps/*"
                 }
         ]
    }' 2>/dev/null | sed 's/,/\n/g' | grep -oP '(https:\/\/.*Token=[\w\d]*)|((?<=consumerKey":")[\w\d]*)')"
@@ -280,6 +287,8 @@ while getopts “:hdgW:C:P:t:k:s:c:p:” OPTION; do
                         'domain')   pre_query="/domain/"
                             ;;
                         'server')   pre_query="/dedicated/server/"
+                            ;;
+                        'server')   pre_query="/vps/"
                             ;;
                         *)           >&2 echo "Unknown argument $OPTARG in Option $OPTION. Execute script with -h option to get help."; exit 3
                             ;;
