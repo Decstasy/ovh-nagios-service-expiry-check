@@ -11,7 +11,7 @@
   3. [Configure Nagios](#configure-nagios---general-notes)
 	* [General notes](#configure-nagios---general-notes)
     * [Domains](#configure-nagios---domains)
-    * [Dedicated servers](#configure-nagios---dedicated-servers)
+    * [Dedicated servers / VPS](#configure-nagios---dedicated-servers-/-VPS)
 3. [License](#license)
 
 ## Description
