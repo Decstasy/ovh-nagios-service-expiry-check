@@ -131,6 +131,7 @@ define command {
         register                        1
 }
 ```
+**For VPS set -t vps*
 
 Define a new service:
 ```
