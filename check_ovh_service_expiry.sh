@@ -40,7 +40,7 @@
 function usage {
     cat << EOF
 Usage: ${0##*/} [-hd] [-W warn in day(s)] [-C critical in day(s)] [-P provider]
-[-t Type (domain/server)] [-k Application Key] [-s Application Secret] [-c Consumer Key] [-p product]
+[-t Type (domain/server/vps)] [-k Application Key] [-s Application Secret] [-c Consumer Key] [-p product]
 
 Check expiry date of Server's and Domain's from OVH (ovh), SoYouStart (sys) and Kimsufi (ksf).
 
@@ -84,7 +84,7 @@ EOF
 function check_progs {
         rc=0
         # At least Bash version 3 is required
-        if [ ${BASH_VERSINFO[0]} -lt 3 ]; then 
+        if [ ${BASH_VERSINFO[0]} -lt 3 ]; then
             echo "At least Bash version 3 is required to run this script!"
             rc=1
         fi
@@ -127,7 +127,7 @@ function sys_query {
 }
 
 function get_exp_date {
-    # Loop with 3 tries since OVH has sometimes API problems. 
+    # Loop with 3 tries since OVH has sometimes API problems.
     # Using curls --retry and --retry-delay is not an option since we have to generate a new signature per retry.
     for ((i = 0 ; i <= 2 ; i++)); do
         # Query provider
@@ -288,7 +288,7 @@ while getopts “:hdgW:C:P:t:k:s:c:p:” OPTION; do
                             ;;
                         'server')   pre_query="/dedicated/server/"
                             ;;
-                        'server')   pre_query="/vps/"
+                           'vps')   pre_query="/vps/"
                             ;;
                         *)           >&2 echo "Unknown argument $OPTARG in Option $OPTION. Execute script with -h option to get help."; exit 3
                             ;;
