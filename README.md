@@ -19,7 +19,7 @@
 Please don't hesitate to contact me via [e-mail](mailto:request@decstasy.de) if you have suggestions, ideas, feature requests or bugs.
 
 ### What it's designed for
-This script is designed to check the expiry date of dedicated servers and domains directly via API. It is especially designed to return the result in a typical nagios format.
+This script is designed to check the expiry date of dedicated servers, vps and domains directly via API. It is especially designed to return the result in a typical nagios format.
 
 You can use it for servers and domains from:
 * OVH
@@ -120,7 +120,7 @@ define host {
 ```
 **It's important to set host_name to your-domain.com (see command definition).*
 
-### Configure nagios - Dedicated servers
+### Configure nagios - Dedicated servers / VPS
 I suggest you to check the expiry as a nagios service and store the keys in the host definition - in this example configuration a dedicated server from SoYouStart. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
 
 First you will need a new command:
