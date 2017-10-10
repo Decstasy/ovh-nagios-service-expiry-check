@@ -29,7 +29,7 @@
 #  │      (to handle API query problems)                                        ║
 #  │ 2017-05-30 Version 0.2-1                                                   ║
 #  │    + Improved some code                                                    ║
-#  │ 2017-05-30 Version 0.3-0                                                   ║
+#  │ 2017-08-29 Version 0.3-0                                                   ║
 #  │    + Added support for VPS                                                 ║
 #  ╘════════════════════════════════════════════════════════════════════════════╝
 
