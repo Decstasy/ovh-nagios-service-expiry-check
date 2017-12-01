@@ -18,19 +18,6 @@
 #  │                                                                            ║
 #  │ You should have received a copy of the GNU General Public License          ║
 #  │ along with this program; if not, see <http://www.gnu.org/licenses/>.       ║
-#  ├────────────────────────────────────────────────────────────────────────────╢
-#  │ Changelog:                                                                 ║
-#  │ 2016-03-29 Version 0.1b                                                    ║
-#  │    + First release                                                         ║
-#  │ 2016-08-15 Version 0.1                                                     ║
-#  │    + Added function to generate keys (-g) and altered help                 ║
-#  │ 2017-05-30 Version 0.2                                                     ║
-#  │    + Changed get_exp_date to use a for loop with 3 retries                 ║
-#  │      (to handle API query problems)                                        ║
-#  │ 2017-05-30 Version 0.2-1                                                   ║
-#  │    + Improved some code                                                    ║
-#  │ 2017-08-29 Version 0.3-0                                                   ║
-#  │    + Added support for VPS                                                 ║
 #  ╘════════════════════════════════════════════════════════════════════════════╝
 
 #----------------------------------------------#
