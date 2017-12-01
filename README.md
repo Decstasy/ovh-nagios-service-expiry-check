@@ -37,6 +37,9 @@ Ok: ns304258.ip-94-23-210.eu will expire in 19 days on 2016-09-05.
 ```
 
 ## Installation
+### Download
+If you dont want to downlad the very latest script, which might have bugs you can download the latest release [here](https://github.com/Decstasy/ovh-nagios-service-expiry-check/releases/latest).
+
 ### Requirements
 To run this properly you should have Bash version 4.x and the following additional commands must be available:
 * curl (to communicate with the API)
