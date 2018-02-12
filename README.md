@@ -44,6 +44,9 @@ If you dont want to downlad the very latest script, which might have bugs you ca
 To run this properly you should have Bash version 4.x and the following additional commands must be available:
 * curl (to communicate with the API)
 * sha1sum (for API signature)
+* ca-certificates-utils*
+
+**For Arch Linux only*
 
 ### Generate API keys
 In order to use this script you have to generate 3 keys for the API which are the:
