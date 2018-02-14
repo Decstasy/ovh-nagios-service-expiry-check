@@ -41,9 +41,12 @@ Ok: ns304258.ip-94-23-210.eu will expire in 19 days on 2016-09-05.
 If you dont want to downlad the very latest script, which might have bugs you can download the latest release [here](https://github.com/Decstasy/ovh-nagios-service-expiry-check/releases/latest).
 
 ### Requirements
-To run this properly you should have Bash version 4.x and the following additional commands must be available:
+To run this properly you should have Bash version 4.x and the these additional commands must be available:
 * curl (to communicate with the API)
 * sha1sum (for API signature)
+
+The following additional packages are needed on Arch Linux:
+* ca-certificates-utils (to use curl with SSL)
 
 ### Generate API keys
 In order to use this script you have to generate 3 keys for the API which are the:
