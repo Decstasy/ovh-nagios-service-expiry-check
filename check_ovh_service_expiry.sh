@@ -81,7 +81,18 @@ function check_progs {
                         rc=1
                 fi
         done
-        [[ $rc -ge 1 ]] && exit $rc
+        # Arch Linux only
+	if [[ -f /etc/arch-release ]]; then
+		# Curl wont establish a SSL connection without ca-certificates-utils
+		# To improve performance we check for file existence and in the 2nd stage for the package via Pacman
+		if [[ ! -f /etc/ssl/certs/ca-certificates.crt ]]; then			
+			if ! pacman -Qs ca-certificates-utils >/dev/null 2>&1; then
+				echo "Package \"ca-certificates-utils\" is not installed!"
+				rc=1
+			fi
+		fi
+	fi
+	[[ $rc -ge 1 ]] && exit $rc
         true
 }
 
