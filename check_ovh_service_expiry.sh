@@ -27,7 +27,7 @@
 function usage {
     cat << EOF
 Usage: ${0##*/} [-hd] [-W warn in day(s)] [-C critical in day(s)] [-P provider]
-[-t Type (domain/server/vps)] [-k Application Key] [-s Application Secret] [-c Consumer Key] [-p product]
+[-t Type (domain/server/vps/privatecloud)] [-k Application Key] [-s Application Secret] [-c Consumer Key] [-p product]
 
 Check expiry date of Server's and Domain's from OVH (ovh), SoYouStart (sys) and Kimsufi (ksf).
 
@@ -37,11 +37,11 @@ Check expiry date of Server's and Domain's from OVH (ovh), SoYouStart (sys) and 
 -W [Days]               Warn before product will expire in day(s) - optional - default 5
 -C [Days]               Raise critical notification in day(s) before product will expire - optional - default 2
 -P [Provider]           Allowed values: ovh, sys, ksf
--t [Type]               Allowed values: domain, server, vps
+-t [Type]               Allowed values: domain, server, vps, privatecloud
 -k [Application Key]    The key e.g.: kdODIcFCmNnb8FII
 -s [Application Secret] The secret e.g.: Wn5ZJmhLISvRT6gV7GDygwAp0WFzbkLe
 -c [Consumer Key]       The key e.g.: x6u9Bs3oukK1kOX3FxkVPj2dWByw6U0C
--p [product]            Your product name e.g.: ns355884.ip-188-165-243.eu
+-p [product]            Your product name e.g.: ns355884.ip-188-165-243.eu, pcc-198-23-143-32
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -200,6 +200,10 @@ Enter application key: "
                 {
                   "method": "GET",
                   "path": "/vps/*"
+                },
+                {
+                  "method": "GET",
+                  "path": "/dedicatedCloud/*"
                 }
         ]
    }' 2>/dev/null | sed 's/,/\n/g' | grep -oP '(https:\/\/.*Token=[\w\d]*)|((?<=consumerKey":")[\w\d]*)')"
@@ -276,6 +280,8 @@ while getopts “:hdgW:C:P:t:k:s:c:p:” OPTION; do
                         'server')   pre_query="/dedicated/server/"
                             ;;
                            'vps')   pre_query="/vps/"
+                            ;;
+                  'privatecloud')   pre_query="/dedicatedCloud/"
                             ;;
                         *)           >&2 echo "Unknown argument $OPTARG in Option $OPTION. Execute script with -h option to get help."; exit 3
                             ;;
