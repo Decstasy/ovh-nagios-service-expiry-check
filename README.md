@@ -20,7 +20,7 @@
 Please don't hesitate to contact me via [e-mail](mailto:request@decstasy.de) if you have suggestions, ideas, feature requests or bugs.
 
 ### What it's designed for
-This script is designed to check the expiry date of dedicated servers, vps and domains directly via API. It is especially designed to return the result in a typical nagios format.
+This script is designed to check the expiry date of dedicated servers, vps, clouds and domains directly via API. It is especially designed to return the result in a typical nagios format.
 
 You can use it for servers and domains from:
 * OVH
@@ -32,7 +32,7 @@ The domain check will look like this:
 ```
 Ok: decstasy.de will expire in 210 days on 2017-03-15.
 ```
-And servers very similar:
+And other services e.g. servers very similar:
 ```
 Ok: ns304258.ip-94-23-210.eu will expire in 19 days on 2016-09-05.
 ```
