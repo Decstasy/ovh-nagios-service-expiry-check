@@ -9,9 +9,10 @@
   1. [Requirements](#requirements)
   2. [Generate API keys](#generate-api-keys)
   3. [Configure Nagios](#configure-nagios---general-notes)
-	* [General notes](#configure-nagios---general-notes)
+    * [General notes](#configure-nagios---general-notes)
     * [Domains](#configure-nagios---domains)
     * [Dedicated servers / VPS](#configure-nagios---dedicated-servers--vps)
+    * [Private cloud](#configure-nagios---clouds)
 3. [License](#license)
 
 ## Description
@@ -19,7 +20,7 @@
 Please don't hesitate to contact me via [e-mail](mailto:request@decstasy.de) if you have suggestions, ideas, feature requests or bugs.
 
 ### What it's designed for
-This script is designed to check the expiry date of dedicated servers, vps and domains directly via API. It is especially designed to return the result in a typical nagios format.
+This script is designed to check the expiry date of dedicated servers, vps, clouds and domains directly via API. It is especially designed to return the result in a typical nagios format.
 
 You can use it for servers and domains from:
 * OVH
@@ -31,7 +32,7 @@ The domain check will look like this:
 ```
 Ok: decstasy.de will expire in 210 days on 2017-03-15.
 ```
-And servers very similar:
+And other services e.g. servers very similar:
 ```
 Ok: ns304258.ip-94-23-210.eu will expire in 19 days on 2016-09-05.
 ```
@@ -179,6 +180,68 @@ define host {
 }
 ```
 **There is also the custom variable SERVER_NAME as the provider's server name may be different from your hostname - you can get it in your webinterface.*
+
+### Configure nagios - Clouds
+I suggest to configure a cloud as a host and perform the expiry check as host check. In this example configuring a private cloud from ovh. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
+
+First you will need a new command:
+```
+define command {
+        command_name                    check_ovh_service_expiry_privatecloud
+        command_line                    $USER1$/check_ovh_service_expiry.sh -P $_HOSTPROVIDER_NAME$ -t privatecloud -k $_HOSTAPP_KEY$ -s $_HOSTAPP_SECRET$ -c $_HOSTCUST_KEY$ -p $_HOSTSERVER_NAME$ -W $ARG1$ -C $ARG2$
+        register                        1
+}
+```
+
+Define a new host template to make things easier:
+```
+define host {
+        name                            generic-cloud
+        hostgroups                      Clouds
+        check_command                   check_ovh_service_expiry_privatecloud!14!7
+        initial_state                   u
+        max_check_attempts              1
+        check_interval                  60
+        retry_interval                  5
+        check_period                    24x7
+        event_handler                   notify-host-by-email
+        event_handler_enabled           1
+        flap_detection_enabled          1
+        process_perf_data               1
+        retain_status_information       1
+        retain_nonstatus_information    1
+        notification_interval           0
+        notification_period             24x7
+        first_notification_delay        20
+        notification_options            d,r,f,s
+        notifications_enabled           1
+        register                        0
+}
+```
+
+In order to keep your overview organized, add the matching hostgroup:
+```
+define hostgroup {
+        hostgroup_name                  Clouds
+        alias                           Clouds
+        register                        1
+}
+```
+
+And now the final configuration... Your private cloud as host:
+```
+define host {
+        use                             generic-cloud
+        host_name                       privatecloud.decstasy.de
+        alias                           Private cloud
+        _SERVER_NAME                    pcc-198-23-143-32
+        _APP_KEY                        NyFnplDjNMrbZhxC
+        _APP_SECRET                     FurNRpInYpUkkwp89heVmjXu9Qpbta85
+        _CUST_KEY                       MtxEQIjUsfMutoNwhLylRpITxjdT7vrp
+        _PROVIDER_NAME                  ovh
+        register                        1
+}
+```
 
 ## License
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
