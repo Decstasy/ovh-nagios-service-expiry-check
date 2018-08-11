@@ -20,7 +20,7 @@
 Please don't hesitate to contact me via [e-mail](mailto:request@decstasy.de) if you have suggestions, ideas, feature requests or bugs.
 
 ### What it's designed for
-This script is designed to check the expiry date of dedicated servers, vps, clouds and domains directly via API. It is especially designed to return the result in a typical nagios format.
+This script is designed to check the expiry date of dedicated servers, vps, clouds and domains directly via API. It is especially designed to return the result in a typical Nagios format.
 
 You can use it for servers and domains from:
 * OVH
@@ -39,10 +39,10 @@ Ok: ns304258.ip-94-23-210.eu will expire in 19 days on 2016-09-05.
 
 ## Installation
 ### Download
-If you dont want to downlad the very latest script, which might have bugs you can download the latest release [here](https://github.com/Decstasy/ovh-nagios-service-expiry-check/releases/latest).
+If you dont want to download the latest script, which might have bugs you can download the latest release [here](https://github.com/Decstasy/ovh-nagios-service-expiry-check/releases/latest).
 
 ### Requirements
-To run this properly you should have Bash version 4.x and the these additional commands must be available:
+To run this properly you should have Bash version 4.x and these additional commands must be available:
 * curl (to communicate with the API)
 * sha1sum (for API signature)
 
@@ -55,16 +55,16 @@ In order to use this script you have to generate 3 keys for the API which are th
 * Application secret
 * Consumer key (token)
 
-Since I implemented a guide to generate theese keys it's pretty simple. Just follow this steps...
+Since I implemented a guide to generate these keys it should be pretty simple. Just follow these steps...
 * Place the script in your "/usr/local/nagios/libexec/" or "/usr/lib64/nagios/plugins/" directory
 * Add execution bit to file (chmod +x check_ovh_service_expiry.sh)
 * Execute the script with -g parameter and follow instructions
 
 ### Configure Nagios - General notes
-You have to think about YOUR best solution to implement this monitoring. I'm now talking about my case which suits best for me. I have domains via OVH and servers via SoYouStart which means I have to use different keys. This means I cannot set default keys in the script or command definition - they must be dynamically controled by nagios. As I don't want things to get messy, the best solution is to work with custom object variables. The following configuration is able to use different keys per CI.
+You have to think about YOUR best solution to implement this monitoring. I'm now talking about my case which suits best for me. I have domains via OVH and servers via SoYouStart which means I have to use different keys. This means I cannot set default keys in the script or command definition - they must be dynamically controlled by nagios. As I don't want things to get messy, the best solution is to work with custom object variables. The following configuration is able to use different keys per CI.
 
 ### Configure nagios - Domains
-I suggest to configure a domain as a host and perform the expiry check as host check. In this example configuring a domain from ovh. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
+I suggest to configure a domain as a host and perform the expiry check as a host check. In this example configuring a domain from OVH. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with the "-h" parameter.
 
 First you will need a new command:
 ```
@@ -128,7 +128,7 @@ define host {
 **It's important to set host_name to your-domain.com (see command definition).*
 
 ### Configure nagios - Dedicated servers / VPS
-I suggest you to check the expiry as a nagios service and store the keys in the host definition - in this example configuration a dedicated server from SoYouStart. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
+I suggest you to check the expiry as a nagios service and store the keys in the host definition - in this example configuration a dedicated server from SoYouStart. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with the "-h" parameter.
 
 First you will need a new command:
 ```
@@ -157,7 +157,7 @@ define service {
 }
 ```
 
-Define the corresponding servcie group for a better overview:
+Define the corresponding service group for a better overview:
 ```
 define servicegroup {
         servicegroup_name               Contract
@@ -179,10 +179,10 @@ define host {
         register                        1
 }
 ```
-**There is also the custom variable SERVER_NAME as the provider's server name may be different from your hostname - you can get it in your webinterface.*
+**There is also the custom variable SERVER_NAME as the providers server name may be different from your hostname - you can get it in your webinterface.*
 
 ### Configure nagios - Clouds
-I suggest to configure a cloud as a host and perform the expiry check as host check. In this example configuring a private cloud from ovh. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with -h parameter.
+I suggest to configure a cloud as a host and perform the expiry check as a host check. In this example configuring a private cloud from ovh. Please, alter the following definitions for your needs... You can get the possible parameters and values by executing the script with the "-h" parameter.
 
 First you will need a new command:
 ```
