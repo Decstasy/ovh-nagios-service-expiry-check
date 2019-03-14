@@ -59,6 +59,7 @@ Allow access to:
 /dedicated/server/*
 /domain/*
 /vps/*
+/dedicatedCloud/*
 
 If you get with enabled debug mode output like this:
 {"errorCode":"INVALID_CREDENTIAL","httpCode":"403 Forbidden","message":"This credential is not valid"}
@@ -274,11 +275,23 @@ while getopts “:hdgW:C:P:t:k:s:c:p:” OPTION; do
         C)          crit=$OPTARG
             ;;
         P)          case $OPTARG in
-                        'ovh')  api="https://eu.api.ovh.com/1.0"
+			# You may change the endpoint to your nearest physical location
+                        'ovh')  # Europe
+				api="https://eu.api.ovh.com/1.0"
+				# USA
+				# api="https://api.us.ovhcloud.com/1.0"
+				# Canada
+				# api="https://ca.api.ovh.com/1.0"
                             ;;
-                        'sys')  api="https://eu.api.soyoustart.com/1.0"
+                        'sys')  # Europe
+				api="https://eu.api.soyoustart.com/1.0"
+				# Canada
+				# api="https://ca.api.soyoustart.com/1.0"
                             ;;
-                        'ksf')  api="https://eu.api.kimsufi.com/1.0"
+                        'ksf')  # Europe
+				api="https://eu.api.kimsufi.com/1.0"
+				# Canada
+				# api="https://ca.api.kimsufi.com/1.0"
                             ;;
                         *)
                              >&2 echo "Unknown argument $OPTARG in Option $OPTION. Execute script with -h option to get help."; exit 3
