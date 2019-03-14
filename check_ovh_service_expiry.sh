@@ -59,6 +59,7 @@ Allow access to:
 /dedicated/server/*
 /domain/*
 /vps/*
+/dedicatedCloud/*
 
 If you get with enabled debug mode output like this:
 {"errorCode":"INVALID_CREDENTIAL","httpCode":"403 Forbidden","message":"This credential is not valid"}
