@@ -3,7 +3,7 @@
 #  ┌────────────────────────────────────────────────────────────────────────────╖
 #  │ Nagios script to check Domain and Server expiry date from ovh,             ║
 #  │ SoYouStart and Kimsufi.                                                    ║
-#  │ Copyright (C) 2016-2017 Dennis Ullrich                                     ║
+#  │ Copyright (C) 2016-2019 Dennis Ullrich                                     ║
 #  │ E-Mail: request@decstasy.de                                                ║
 #  ├────────────────────────────────────────────────────────────────────────────╢
 #  │ This program is free software; you can redistribute it and/or modify       ║
